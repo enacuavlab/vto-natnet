@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-sys.path.insert(0,"../common")
+sys.path.insert(0,"/home/pprz/Projects/vto-natnet/common")
 from NatNetClient import NatNetClient
 
 import time
@@ -30,7 +30,7 @@ import numpy as np
 #
 #------------------------------------------------------------------------------
 
-id_dict = dict([('65','65'),('69','69')]) # rigidbody_ID, aircraft_ID
+id_dict = dict([('888','888'),('65','65'),('69','69')]) # rigidbody_ID, aircraft_ID
 freq = 10
 vel_samples = 20
 
@@ -82,8 +82,11 @@ def compute_velocity(ac_id):
   return vel
 
 
-def receiveRigidBodyList( rigid_body_data, stamp ):
+#------------------------------------------------------------------------------
+def receiveRigidBodyMarkerSetList( rigid_body_data, marker_set_data, stamp ):
+
   for rigid_body in rigid_body_data.rigid_body_list:
+
     if not rigid_body.tracking_valid:
       # skip if rigid body is not valid
       continue
@@ -114,7 +117,8 @@ natnet = NatNetClient()
 natnet.set_server_address("192.168.1.240")
 natnet.set_client_address('0.0.0.0')
 natnet.set_print_level(0)  # 1 to print all frames
-natnet.rigid_body_list_listener = receiveRigidBodyList
+natnet.rigid_body_marker_set_list_listener = receiveRigidBodyMarkerSetList
+  
 
 try:
   is_running = natnet.run()

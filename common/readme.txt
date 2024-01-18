@@ -1,3 +1,6 @@
+These are python script provide by optitrack, to use natnet SDK 
+Following patch (*) should be applied to retrieve rigid body and marker set
+
 https://optitrack.com/support/downloads/developer-tools.html
 
 Download for windows
@@ -8,18 +11,30 @@ Get NatNetSDK/Samples/PythonClient
 - MoCapData.py
 - NatNetClient.py
 
-Patch NatNetClient.py
+--------------------------------------------------------------------------------
+(*) Patch NatNetClient.py
 "
   self.rigid_body_listener = None
   self.new_frame_listener  = None
-  self.rigid_body_list_listener = None
+
+  self.rigid_body_marker_set_list_listener = None
 "
 "
   self.new_frame_listener( data_dict )
-  if self.rigid_body_list_listener is not None:
-    self.rigid_body_list_listener(rigid_body_data, timestamp)
+
+  if self.rigid_body_marker_set_list_listener is not None:
+    self.rigid_body_marker_set_list_listener(rigid_body_data, marker_set_data, timestamp)
 "
+
+--------------------------------------------------------------------------------
+sudo apt-get install python3-pip
+sudo pip3 install pyquaternion
 
 ./natnet41.py
 
+
+--------------------------------------------------------------------------------
 #./natnet2ivy.py -xs right -up z_up -le near -an far -ac 217 217 -s 192.168.1.240
+
+    from pprzlink.ivy import IvyMessagesInterface
+ModuleNotFoundError: No module named 'pprzlink'

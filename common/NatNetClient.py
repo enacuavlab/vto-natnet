@@ -81,7 +81,8 @@ class NatNetClient:
         # Set this to a callback method of your choice to receive per-rigid-body data at each frame.
         self.rigid_body_listener = None
         self.new_frame_listener  = None
-        self.rigid_body_list_listener = None
+
+        self.rigid_body_marker_set_list_listener = None
 
         # Set Application Name
         self.__application_name = "Not Set"
@@ -895,8 +896,8 @@ class NatNetClient:
 
             self.new_frame_listener( data_dict )
 
-        if self.rigid_body_list_listener is not None:
-            self.rigid_body_list_listener(rigid_body_data, timestamp)
+        if self.rigid_body_marker_set_list_listener is not None:
+            self.rigid_body_marker_set_list_listener(rigid_body_data, marker_set_data,timestamp)
 
         return offset, mocap_data
 
