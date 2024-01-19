@@ -25,16 +25,3 @@ Get NatNetSDK/Samples/PythonClient
   if self.rigid_body_marker_set_list_listener is not None:
     self.rigid_body_marker_set_list_listener(rigid_body_data, marker_set_data, timestamp)
 "
-
---------------------------------------------------------------------------------
-sudo apt-get install python3-pip
-sudo pip3 install pyquaternion
-
-./natnet41.py
-
-
---------------------------------------------------------------------------------
-#./natnet2ivy.py -xs right -up z_up -le near -an far -ac 217 217 -s 192.168.1.240
-
-    from pprzlink.ivy import IvyMessagesInterface
-ModuleNotFoundError: No module named 'pprzlink'
