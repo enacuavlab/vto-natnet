@@ -29,12 +29,3 @@ Get NatNetSDK/Samples/PythonClient
 --------------------------------------------------------------------------------
 sudo apt-get install python3-pip
 sudo pip3 install pyquaternion
-
-./natnet41.py
-
-
---------------------------------------------------------------------------------
-#./natnet2ivy.py -xs right -up z_up -le near -an far -ac 217 217 -s 192.168.1.240
-
-    from pprzlink.ivy import IvyMessagesInterface
-ModuleNotFoundError: No module named 'pprzlink'
