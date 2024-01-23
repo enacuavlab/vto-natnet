@@ -2,7 +2,6 @@
 import sys
 from NatNetClient import NatNetClient
 
-import threading
 import time
 from collections import deque
 import numpy as np
@@ -41,17 +40,7 @@ class Rigidbody():
 
 
 #------------------------------------------------------------------------------
-class Thread_natnet(threading.Thread):
-
-  def __init__(self,quitflag,rigidBodyDict,freq=int(20),vel_samples=int(4)):
-    threading.Thread.__init__(self)
-    self.quitflag = quitflag
-    self.rigidBodyDict = rigidBodyDict
-    self.period = 1.0 / freq
-    self.vel_samples = vel_samples
-    self.timestamp = dict([(rb, None) for rb in self.rigidBodyDict])
-    self.track = dict([(rb, deque()) for rb in self.rigidBodyDict])
-
+class Natnet():
 
   def store_track(self,ac_id, pos, t):
     if ac_id in self.rigidBodyDict.keys():
@@ -109,31 +98,32 @@ class Thread_natnet(threading.Thread):
       self.rigidBodyDict[i].position=np.array([pos[0],pos[1],pos[2]])
       self.rigidBodyDict[i].velocity=np.array([vel[0],vel[1],vel[2]])
       self.rigidBodyDict[i].valid = True
-  
 
-  def run(self):
-    natnet = NatNetClient()
-    natnet.set_server_address("192.168.1.240")
-    natnet.set_client_address('0.0.0.0')
-    natnet.set_print_level(0)  # 1 to print all frames
-    natnet.rigid_body_marker_set_list_listener = self.receiveRigidBodyMarkerSetList
-    try:
-      is_running = natnet.run()
-      if not is_running:
-        print("Natnet error: Could not start streaming client.")
-        exit(-1)
+
+  def __init__(self,rigidBodyDict,freq=int(20),vel_samples=int(4)):
+    self.runningstate = False
+    self.rigidBodyDict = rigidBodyDict
+    self.period = 1.0 / freq
+    self.vel_samples = vel_samples
+    self.timestamp = dict([(rb, None) for rb in self.rigidBodyDict])
+    self.track = dict([(rb, deque()) for rb in self.rigidBodyDict])
+
+    self.natnet = NatNetClient()
+    self.natnet.set_server_address("192.168.1.240")
+    self.natnet.set_client_address('0.0.0.0')
+    self.natnet.set_print_level(0)  # 1 to print all frames
+    self.natnet.rigid_body_marker_set_list_listener = self.receiveRigidBodyMarkerSetList
+    if self.natnet.run():
       time.sleep(1)
-      if not natnet.connected():
-        print("Natnet error: Fail to connect to natnet")
-        exit(-1)
-      while not self.quitflag:
-        time.sleep(1)
-      print("Shutting down natnet41")
-      exit(0)
-    except (KeyboardInterrupt, SystemExit):
-      print("Shutting down natnet interfaces...")
-      natnet.shutdown()
-    except OSError:
-      print("Natnet connection error")
-      natnet.shutdown()
-      exit(-1)
+      if self.natnet.connected():
+        self.runningstate=True
+    if not self.runningstate:
+        self.stop()
+
+
+  def running(self):
+    return (self.runningstate)
+
+
+  def stop(self):
+    self.natnet.shutdown()

@@ -1,27 +1,26 @@
 #!/usr/bin/python3
 import sys
-sys.path.insert(0,"/home/pprz/Projects/vto-natnet/common")
-from natnet41 import Rigidbody,Thread_natnet
+sys.path.insert(0,"../common")
+from natnet41 import Rigidbody,Natnet
 
 import threading,time
 
-acId = 888   # Rigid body tracked id
+acId = 51   # Rigid body tracked id
 optiFreq = 120 # [100, 120, 180, 240, 360] Check that optitrack stream at least with this value to avoid duplicate captures
 printFreq =120 
 
 #------------------------------------------------------------------------------
 class Thread_print(threading.Thread):
-  def __init__(self,quitflag,bodies,freq):
+  def __init__(self,bodies,freq):
     threading.Thread.__init__(self)
-    self.quitflag = quitflag
+    self.quitflag = False
     self.bodies = bodies
     self.period = 1/freq
-    self.suspend = False
 
   def run(self):
     starttime = time.time()  
     try:
-      while not self.quitflag and not (self.suspend):
+      while not self.quitflag:
         curr = self.bodies[acId]
         stamp = time.time()-starttime
         print("%.3f %d %f %.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f"  
@@ -36,20 +35,28 @@ class Thread_print(threading.Thread):
     finally:
       print("Thread_print stop")
  
-#------------------------------------------------------------------------------
-class Flag(threading.Event):
-  def __bool__(self):
-    return self.is_set()
+  def stop(self):
+    self.quitflag = True
+
 
 #------------------------------------------------------------------------------
 def main(bodies):
-  flag = Flag()
   if len(bodies):
     try:
-      threadMotion = Thread_natnet(flag,bodies,freq=optiFreq,vel_samples=1)
-      threadMotion.start()
-      threadPrint = Thread_print(flag,bodies,printFreq)
+      motion = Natnet(bodies,freq=optiFreq,vel_samples=1)
+      if not motion.running(): 
+       exit(-1)
+
+      threadPrint = Thread_print(bodies,printFreq)
       threadPrint.start()
+
+      while True:
+        time.sleep(1)
+
+    except (KeyboardInterrupt, SystemExit):
+      threadPrint.stop()
+      motion.stop()
+
     except ValueError as msg:
       print(msg)
       exit()
@@ -58,5 +65,4 @@ def main(bodies):
 if __name__=="__main__":
   bodies = {}
   bodies[acId] = Rigidbody(acId)
-#  bodies[65] = Rigidbody(65)
   main(bodies)
