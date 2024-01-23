@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-sys.path.insert(0,"/home/pprz/Projects/vto-natnet/common")
+sys.path.insert(0,"../common")
 from NatNetClient import NatNetClient
 
 import time
