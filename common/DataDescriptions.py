@@ -99,7 +99,8 @@ def get_as_string(input_str):
     if type(input_str) == str:
         return input_str
     else:
-        return input_str.decode('utf-8')
+        return input_str.decode('windows-1252')
+#        return input_str.decode('utf-8')
 
 
 def get_data_sub_packet_type(new_data):
