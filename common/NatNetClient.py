@@ -486,7 +486,7 @@ class NatNetClient:
             # Model name
             model_name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
             offset += len( model_name ) + 1
-            trace_mf( "Model Name      : ", model_name.decode( 'utf-8' ) )
+            trace_mf( "Model Name      : ", model_name.decode( 'windows-1252' ) ) # model_name.decode( 'utf-8' ) )
             marker_data.set_model_name(model_name)
             # Marker count (4 bytes)
             marker_count = int.from_bytes( data[offset:offset+4], byteorder='little' )
@@ -910,7 +910,7 @@ class NatNetClient:
 
         name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
         offset += len( name ) + 1
-        trace_dd( "Marker Set Name: %s" % (name.decode( 'utf-8' )) )
+        trace_dd( "Marker Set Name: %s" % (name.decode( 'windows-1252' )) ) # name.decode( 'utf-8' )) ) 
         ms_desc.set_name(name)
 
         marker_count = int.from_bytes( data[offset:offset+4], byteorder='little' )
@@ -920,7 +920,7 @@ class NatNetClient:
             for i in range( 0, marker_count ):
                 name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
                 offset += len( name ) + 1
-                trace_dd( "\t%2.1d Marker Name: %s"%(i, name.decode( 'utf-8' ) ))
+                trace_dd( "\t%2.1d Marker Name: %s"%(i, name.decode( 'windows-1252' ) )) # name.decode( 'utf-8' ) )) 
                 ms_desc.add_marker_name(name)
 
         return offset, ms_desc
@@ -935,7 +935,7 @@ class NatNetClient:
             name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
             offset += len( name ) + 1
             rb_desc.set_name(name)
-            trace_dd( "\tRigid Body Name   : ", name.decode( 'utf-8' ) )
+            trace_dd( "\tRigid Body Name   : ", name.decode( 'windows-1252' ) ) # name.decode( 'utf-8' ) )
 
         # ID
         new_id = int.from_bytes( data[offset:offset+4], byteorder='little' )
@@ -982,7 +982,7 @@ class NatNetClient:
                 if (major >= 4) or (major == 0):
                     # markername
                     marker_name, separator, remainder = bytes(data[offset3:]).partition( b'\0' )
-                    marker_name = marker_name.decode( 'utf-8' )
+                    marker_name = marker_name.decode( 'windows-1252' ) # marker_name.decode( 'utf-8' )
                     offset3 += len( marker_name ) + 1
 
                 rb_marker=DataDescriptions.RBMarker(marker_name,active_label,marker_offset)
@@ -1004,7 +1004,7 @@ class NatNetClient:
         name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
         offset += len( name ) + 1
         skeleton_desc.set_name(name)
-        trace_dd( "Name : %s"% name.decode( 'utf-8' ) )
+        trace_dd( "Name : %s"% name.decode( 'windows-1252' ) ) # name.decode( 'utf-8' ) )
 
         #ID
         new_id = int.from_bytes( data[offset:offset+4], byteorder='little' )
@@ -1040,7 +1040,7 @@ class NatNetClient:
             serial_number, separator, remainder = bytes(data[offset:]).partition( b'\0' )
             offset += len( serial_number ) + 1
             fp_desc.set_serial_number(serial_number)
-            trace_dd( "\tSerial Number : ", serial_number.decode( 'utf-8' ) )
+            trace_dd( "\tSerial Number : ", serial_number.decode( 'windows-1252' ) ) # serial_number.decode( 'utf-8' ) )
 
             # Dimensions
             f_width = FloatValue.unpack( data[offset:offset+4])
@@ -1105,7 +1105,7 @@ class NatNetClient:
             for i in range(0, num_channels):
                 channel_name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
                 offset += len( channel_name ) + 1
-                trace_dd( "\tChannel Name %3.1d: %s"%(i, channel_name.decode( 'utf-8' ) ))
+                trace_dd( "\tChannel Name %3.1d: %s"%(i, channel_name.decode( 'windows-1252' ) )) # channel_name.decode( 'utf-8' ) ))
                 fp_desc.add_channel_name(channel_name)
 
         trace_dd("unpackForcePlate processed ", offset, " bytes")
@@ -1123,12 +1123,12 @@ class NatNetClient:
             # Name
             name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
             offset += len( name ) + 1
-            trace_dd( "\tName : ", name.decode( 'utf-8' ) )
+            trace_dd( "\tName : ", name.decode( 'windows-1252' ) ) # name.decode( 'utf-8' ) )
 
             # Serial Number
             serial_number, separator, remainder = bytes(data[offset:]).partition( b'\0' )
             offset += len( serial_number ) + 1
-            trace_dd( "\tSerial Number : ", serial_number.decode( 'utf-8' ) )
+            trace_dd( "\tSerial Number : ", serial_number.decode( 'windows-1252' ) ) # serial_number.decode( 'utf-8' ) )
 
 
             # Device Type int
@@ -1153,7 +1153,7 @@ class NatNetClient:
                 channel_name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
                 offset += len( channel_name ) + 1
                 device_desc.add_channel_name(channel_name)
-                trace_dd( "\tChannel ",i," Name : ", channel_name.decode( 'utf-8' ) )
+                trace_dd( "\tChannel ",i," Name : ", channel_name.decode( 'windows-1252' ) ) # channel_name.decode( 'utf-8' ) )
 
         trace_dd("unpack_device_description processed ", offset, " bytes")
         return offset, device_desc
@@ -1163,7 +1163,7 @@ class NatNetClient:
         # Name
         name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
         offset += len( name ) + 1
-        trace_dd( "\tName       : %s"% name.decode( 'utf-8' ) )
+        trace_dd( "\tName       : %s"% name.decode( 'windows-1252' ) ) # name.decode( 'utf-8' ) )
         # Position
         position = Vector3.unpack( data[offset:offset+12] )
         offset += 12
@@ -1185,7 +1185,7 @@ class NatNetClient:
         # Name
         name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
         offset += len( name ) + 1
-        trace_dd( "\tName       : %s"% name.decode( 'utf-8' ) )
+        trace_dd( "\tName       : %s"% name.decode( 'windows-1252' ) ) # name.decode( 'utf-8' ) )
 
         # ID
         marker_id =  data[offset:offset+4]
@@ -1330,7 +1330,7 @@ class NatNetClient:
         # Name
         name, separator, remainder = bytes(data[offset:]).partition( b'\0' )
         offset += len( name ) + 1
-        trace_dd( "\tName       : %s"% name.decode( 'utf-8' ) )
+        trace_dd( "\tName       : %s"% name.decode( 'windows-1252' ) ) # name.decode( 'utf-8' ) )
 
         # Asset Type 4 bytes
         assetType =  data[offset:offset+4]
@@ -1431,7 +1431,7 @@ class NatNetClient:
         # Server name
         #szName = data[offset: offset+256]
         self.__application_name, separator, remainder = bytes(data[offset: offset+256]).partition( b'\0' )
-        self.__application_name=str(self.__application_name, "utf-8")
+        self.__application_name=str(self.__application_name, "windows-1252") # self.__application_name=str(self.__application_name, "utf-8")
         offset += 256
         # Server Version info
         server_version = struct.unpack( 'BBBB', data[offset:offset+4] )
@@ -1488,7 +1488,7 @@ class NatNetClient:
 
     def __unpack_bitstream_info(self, data, packet_size, major, minor):
         nn_version=[]
-        inString = data.decode('utf-8')
+        inString = data.decode('windows-1252') # data.decode('utf-8')
         messageList = inString.split(',')
         if( len(messageList) > 1 ):
             if( messageList[0] == 'Bitstream'):
@@ -1652,7 +1652,7 @@ class NatNetClient:
                 show_remainder = False
                 message, separator, remainder = bytes(data[offset:]).partition( b'\0' )
                 if(len(message) < 30):
-                    tmpString = message.decode('utf-8')
+                    tmpString = message.decode('windows-1252') # message.decode('utf-8')
                     # Decode bitstream version
                     if( tmpString.startswith('Bitstream') ):
                         nn_version = self.__unpack_bitstream_info(data[offset:],packet_size, major, minor)
@@ -1666,10 +1666,10 @@ class NatNetClient:
                 offset += len( message ) + 1
 
                 if(show_remainder):
-                    trace( "Command response:", message.decode( 'utf-8' ),\
-                        " separator:", separator, " remainder:",remainder )
+                    trace( "Command response:", message.decode( 'windows-1252' ),\
+                        " separator:", separator, " remainder:",remainder ) #  message.decode( 'utf-8' ),
                 else:
-                    trace( "Command response:", message.decode( 'utf-8' ))
+                    trace( "Command response:", message.decode( 'windows-1252' )) # message.decode( 'utf-8' ))
         elif message_id == self.NAT_UNRECOGNIZED_REQUEST :
             trace( "Message ID  : %3.1d NAT_UNRECOGNIZED_REQUEST: "% message_id )
             trace( "Packet Size : ", packet_size )
@@ -1679,7 +1679,7 @@ class NatNetClient:
             trace( "Packet Size : ", packet_size )
             message, separator, remainder = bytes(data[offset:]).partition( b'\0' )
             offset += len( message ) + 1
-            trace( "Received message from server:", message.decode( 'utf-8' ) )
+            trace( "Received message from server:", message.decode( 'windows-1252' ) ) #  message.decode( 'utf-8' ) )
         else:
             trace( "Message ID  : %3.1d UNKNOWN"% message_id )
             trace( "Packet Size : ", packet_size )
@@ -1729,7 +1729,7 @@ class NatNetClient:
         if command == self.NAT_CONNECT :
             data+=bytearray(command_str)
         else:
-            data += command_str.encode( 'utf-8' )
+            data += command_str.encode( 'windows-1252' ) # command_str.encode( 'utf-8' )
         data += b'\0'
 
         return in_socket.sendto( data, address )
