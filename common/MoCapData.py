@@ -101,7 +101,8 @@ def get_as_string(input_str):
     elif type_input_str ==  "<class 'NoneType'>":
         return ""
     elif type_input_str == "<class 'bytes'>":
-        return input_str.decode('utf-8')
+        return input_str.decode('windows-1252')
+#        return input_str.decode('utf-8')        
     else:
         print("type_input_str = %s NOT HANDLED"%type_input_str)
         return input_str
